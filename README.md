@@ -4,4 +4,5 @@ Seamlessly manage application cache, config, data, and log files. Wraps around a
 
 ## ToDo
 Add file categories
+
 Add regex searching to directory_load()
