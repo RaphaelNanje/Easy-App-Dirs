@@ -1,6 +1,6 @@
 import json
-from os import mkdir, makedirs
-from os.path import join, exists
+from os import mkdir, makedirs, walk
+from os.path import join, exists, splitext
 
 import appdirs
 from logzero import logger
@@ -22,7 +22,8 @@ class EasyAppDirs(appdirs.AppDirs):
             mkdir(self.user_log_dir)
 
     def register_file(self, file_name: str, path: str, short_name: str = None):
-        makedirs(path)
+        if not exists(path):
+            makedirs(path, exist_ok=True)
         path = join(path, file_name)
         self.file_paths[file_name] = path
         if short_name:
@@ -44,12 +45,15 @@ class EasyAppDirs(appdirs.AppDirs):
     def set_log_name(self, log_file_name: str):
         self.log_file_name = log_file_name
 
-    def directory_load(self):
+    def directory_load(self, path: str, recursive=False):
         """
-        TODO
-        This function will automatically load all files from each folder and add them to self.file_paths
+        Load and register all files within the specified directory
         """
-        pass
+        for root, dirs, files in walk(path, topdown=False):
+            for name in files:
+                file_name = name
+                short_name = splitext(name)[0] if splitext(name)[0] != file_name else None
+                self.register_file(file_name, root, short_name)
 
     def load(self, name: str) -> dict:
         with open(self.get_path(name), "r") as f:
