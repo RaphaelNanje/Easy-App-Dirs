@@ -28,7 +28,6 @@ class EasyAppDirs(appdirs.AppDirs):
             mkdir(self.user_log_dir)
 
     def register_file(self, file_name: str, path: str, short_name: str = None):
-
         if file_name in self.file_paths:
             if join(path, file_name) == self.file_paths[file_name]:
                 return self.file_paths[file_name]
@@ -88,6 +87,10 @@ class EasyAppDirs(appdirs.AppDirs):
     def save(self, name: str, data):
         with open(self.get_path(name), "w+") as f:
             json.dump(data, f, indent=2)
+
+    def json_save(self, name: str, data, default=None, **kwargs):
+        with open(self.get_path(name), "w+") as f:
+            json.dump(data, f, indent=2, default=default, **kwargs)
 
     def exists(self, name: str) -> bool:
         return exists(self.get_path(name))
