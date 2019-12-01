@@ -98,6 +98,20 @@ class EasyAppDirs(appdirs.AppDirs):
             else:
                 return f.read()
 
+    def smart_load(self, name):
+        """
+        Automatically loads based on the file type.
+        Supports JSON/YAML and will do a regular load for everything else
+        """
+
+        ext = os.path.splitext(self.file_paths[name])[1]
+        if ext == '.yaml':
+            self.yaml_load(name)
+        elif ext == '.json':
+            self.json_load(name)
+        else:
+            self.load(name)
+
     def json_load(self, name: str, **kwargs) -> dict:
         self.file_types[name] = 'json'
         with open(self.get_path(name), "r") as f:
@@ -136,26 +150,12 @@ class EasyAppDirs(appdirs.AppDirs):
         """
 
         ext = os.path.splitext(self.file_paths[name])[1]
-        if ext == 'yaml':
+        if ext == '.yaml':
             self.yaml_save(name, data)
-        elif ext == 'json':
+        elif ext == '.json':
             self.json_save(name, data)
         else:
             self.save(name, data)
-
-    def smart_load(self, name):
-        """
-        Automatically loads based on the file type.
-        Supports JSON/YAML and will do a regular load for everything else
-        """
-
-        ext = os.path.splitext(self.file_paths[name])[1]
-        if ext == 'yaml':
-            self.yaml_load(name)
-        elif ext == 'json':
-            self.json_load(name)
-        else:
-            self.load(name)
 
     @property
     def log_path(self):
