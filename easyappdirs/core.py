@@ -115,9 +115,9 @@ class EasyAppDirs(appdirs.AppDirs):
         with open(self.get_path(name), "w+") as f:
             json.dump(data, f, indent=2, default=default, **kwargs)
 
-    def yaml_save(self, name: str, data, default=None, **kwargs):
+    def yaml_save(self, name: str, data, **kwargs):
         with open(self.get_path(name), "w+") as f:
-            yaml.dump(data, f, indent=2, default=default, **kwargs)
+            yaml.dump(data, f, indent=2, **kwargs)
 
     def exists(self, name: str) -> bool:
         return exists(self.get_path(name))
