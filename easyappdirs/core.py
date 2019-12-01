@@ -1,4 +1,5 @@
 import json
+import os
 from os import mkdir, makedirs, walk, listdir
 from os.path import join, exists, splitext, isfile
 
@@ -9,6 +10,8 @@ from easyappdirs.exceptions import NameAlreadyRegisteredError
 
 
 class EasyAppDirs(appdirs.AppDirs):
+    current_file_dir = os.path.dirname(os.path.abspath(__file__))
+
     def __init__(self, app_name, app_author, version=None, log_name="logs.log", override=False):
         """
         :param override: Set this to True to override paths of names that have already been registered
@@ -27,7 +30,7 @@ class EasyAppDirs(appdirs.AppDirs):
         if not exists(self.user_log_dir):
             mkdir(self.user_log_dir)
 
-    def register_file(self, file_name: str, path: str, short_name: str = None):
+    def register_file(self, file_name: str, path: str = current_file_dir, short_name: str = None):
         if file_name in self.file_paths:
             if join(path, file_name) == self.file_paths[file_name]:
                 return self.file_paths[file_name]
