@@ -14,7 +14,7 @@ from easyappdirs.exceptions import NameAlreadyRegisteredError
 class EasyAppDirs(appdirs.AppDirs):
     current_file_dir = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self, app_name, app_author, version=None, log_name="logs.log", override=False):
+    def __init__(self, app_name, app_author='', version=None, log_name="logs.log", override=False):
         """
         :param override: Set this to True to override paths of names that have already been registered
         """
@@ -105,12 +105,13 @@ class EasyAppDirs(appdirs.AppDirs):
         """
 
         ext = os.path.splitext(self.file_paths[name])[1]
+
         if ext == '.yaml':
-            self.yaml_load(name)
+            return self.yaml_load(name)
         elif ext == '.json':
-            self.json_load(name)
-        else:
-            self.load(name)
+            return self.json_load(name)
+
+        self.load(name)
 
     def json_load(self, name: str, **kwargs) -> dict:
         self.file_types[name] = 'json'
