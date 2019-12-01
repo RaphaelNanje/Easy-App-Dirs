@@ -96,13 +96,13 @@ class EasyAppDirs(appdirs.AppDirs):
             else:
                 return f.read()
 
-    def json_load(self, name: str) -> dict:
+    def json_load(self, name: str, **kwargs) -> dict:
         with open(self.get_path(name), "r") as f:
-            return json.load(f)
+            return json.load(f, **kwargs)
 
-    def yaml_load(self, name: str) -> dict:
+    def yaml_load(self, name: str, loader=yaml.FullLoader) -> dict:
         with open(self.get_path(name), "r") as f:
-            return yaml.load(f)
+            return yaml.load(f, loader)
 
     def save(self, name: str, data):
         with open(self.get_path(name), "w+") as f:
