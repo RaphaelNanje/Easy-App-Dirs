@@ -5,6 +5,7 @@ from os.path import join, exists, splitext, isfile
 from typing import Iterable
 
 import appdirs
+import yaml
 from logzero import logger
 
 from easyappdirs.exceptions import NameAlreadyRegisteredError
@@ -99,6 +100,10 @@ class EasyAppDirs(appdirs.AppDirs):
         with open(self.get_path(name), "r") as f:
             return json.load(f)
 
+    def yaml_load(self, name: str) -> dict:
+        with open(self.get_path(name), "r") as f:
+            return yaml.load(f)
+
     def save(self, name: str, data):
         with open(self.get_path(name), "w+") as f:
             if not isinstance(data, Iterable):
@@ -109,6 +114,10 @@ class EasyAppDirs(appdirs.AppDirs):
     def json_save(self, name: str, data, default=None, **kwargs):
         with open(self.get_path(name), "w+") as f:
             json.dump(data, f, indent=2, default=default, **kwargs)
+
+    def yaml_save(self, name: str, data, default=None, **kwargs):
+        with open(self.get_path(name), "w+") as f:
+            yaml.dump(data, f, indent=2, default=default, **kwargs)
 
     def exists(self, name: str) -> bool:
         return exists(self.get_path(name))
