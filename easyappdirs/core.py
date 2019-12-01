@@ -20,6 +20,7 @@ class EasyAppDirs(appdirs.AppDirs):
         """
         super().__init__(app_name, appauthor=app_author, version=version)
         self.file_paths = {}
+        self.file_types = {}
         self.log_file_name = log_name
         self.override = False
 
@@ -90,6 +91,7 @@ class EasyAppDirs(appdirs.AppDirs):
         :param split: readlines() instead of read() if True
         :param strip: call strip() on each line
         """
+        self.file_types[name] = 'normal'
         with open(self.get_path(name), "r") as f:
             if split:
                 return [t.strip() if strip else t for t in f.readlines()]
@@ -97,14 +99,17 @@ class EasyAppDirs(appdirs.AppDirs):
                 return f.read()
 
     def json_load(self, name: str, **kwargs) -> dict:
+        self.file_types[name] = 'json'
         with open(self.get_path(name), "r") as f:
             return json.load(f, **kwargs)
 
     def yaml_load(self, name: str, loader=yaml.FullLoader) -> dict:
+        self.file_types[name] = 'yaml'
         with open(self.get_path(name), "r") as f:
             return yaml.load(f, loader)
 
     def save(self, name: str, data):
+        self.file_types[name] = 'normal'
         with open(self.get_path(name), "w+") as f:
             if not isinstance(data, Iterable):
                 f.write(data)
@@ -112,15 +117,45 @@ class EasyAppDirs(appdirs.AppDirs):
                 f.writelines(data)
 
     def json_save(self, name: str, data, default=None, **kwargs):
+        self.file_types[name] = 'json'
         with open(self.get_path(name), "w+") as f:
             json.dump(data, f, indent=2, default=default, **kwargs)
 
     def yaml_save(self, name: str, data, **kwargs):
+        self.file_types[name] = 'yaml'
         with open(self.get_path(name), "w+") as f:
             yaml.dump(data, f, indent=2, **kwargs)
 
     def exists(self, name: str) -> bool:
         return exists(self.get_path(name))
+
+    def smart_save(self, name, data):
+        """
+        Automatically saves based on the file type.
+        Supports JSON/YAML and will do a regular save for everything else
+        """
+
+        ext = os.path.splitext(self.file_paths[name])[1]
+        if ext == 'yaml':
+            self.yaml_save(name, data)
+        elif ext == 'json':
+            self.json_save(name, data)
+        else:
+            self.save(name, data)
+
+    def smart_load(self, name, data):
+        """
+        Automatically loads based on the file type.
+        Supports JSON/YAML and will do a regular load for everything else
+        """
+
+        ext = os.path.splitext(self.file_paths[name])[1]
+        if ext == 'yaml':
+            self.yaml_load(name)
+        elif ext == 'json':
+            self.json_load(name)
+        else:
+            self.load(name)
 
     @property
     def log_path(self):
