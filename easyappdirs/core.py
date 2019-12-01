@@ -2,6 +2,7 @@ import json
 import os
 from os import mkdir, makedirs, walk, listdir
 from os.path import join, exists, splitext, isfile
+from typing import Iterable
 
 import appdirs
 from logzero import logger
@@ -83,9 +84,12 @@ class EasyAppDirs(appdirs.AppDirs):
                     files_list.append(file_name)
             return files_list
 
-    def load(self, name: str) -> object:
+    def load(self, name: str, split=False) -> object:
         with open(self.get_path(name), "r") as f:
-            return f.readlines()
+            if split:
+                return f.readlines()
+            else:
+                return f.read()
 
     def json_load(self, name: str) -> dict:
         with open(self.get_path(name), "r") as f:
@@ -93,7 +97,10 @@ class EasyAppDirs(appdirs.AppDirs):
 
     def save(self, name: str, data):
         with open(self.get_path(name), "w+") as f:
-            f.write(data)
+            if not isinstance(data, Iterable):
+                f.write(data)
+            else:
+                f.writelines(data)
 
     def json_save(self, name: str, data, default=None, **kwargs):
         with open(self.get_path(name), "w+") as f:
