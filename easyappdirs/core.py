@@ -80,13 +80,17 @@ class EasyAppDirs(appdirs.AppDirs):
                     files_list.append(file_name)
             return files_list
 
-    def load(self, name: str) -> dict:
+    def load(self, name: str) -> object:
+        with open(self.get_path(name), "r") as f:
+            return f.readlines()
+
+    def json_load(self, name: str) -> dict:
         with open(self.get_path(name), "r") as f:
             return json.load(f)
 
     def save(self, name: str, data):
         with open(self.get_path(name), "w+") as f:
-            json.dump(data, f, indent=2)
+            f.write(data)
 
     def json_save(self, name: str, data, default=None, **kwargs):
         with open(self.get_path(name), "w+") as f:
