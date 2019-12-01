@@ -15,7 +15,6 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue('testy' in app_dirs.file_paths)
         self.assertTrue('testt' in app_dirs.file_paths)
 
-
     def test_save(self):
         data = dict(
             a=1,
@@ -29,7 +28,6 @@ class MyTestCase(unittest.TestCase):
         app_dirs.smart_load('testy')
         app_dirs.smart_save('testt', data)
         app_dirs.smart_load('testt')
-
 
 
 if __name__ == '__main__':
