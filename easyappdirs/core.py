@@ -111,7 +111,7 @@ class EasyAppDirs(appdirs.AppDirs):
         elif ext == '.json':
             return self.json_load(name)
 
-        self.load(name)
+        return self.load(name)
 
     def json_load(self, name: str, **kwargs) -> dict:
         self.file_types[name] = 'json'
