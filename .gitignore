@@ -128,4 +128,4 @@ dmypy.json
 EasyAppDirs.egg-info/
 easyappdirs.egg-info/
 easyappdirs/__pycache__/
-!/tests/testfiles/
+/tests/testfiles/
