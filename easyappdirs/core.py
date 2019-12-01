@@ -69,7 +69,7 @@ class EasyAppDirs(appdirs.AppDirs):
 
     def directory_load(self, path: str, recursive=False):
         """
-        Load and register all files within the specified directory
+        Load and register all files within a specified directory
         """
         if not recursive:
             files = [f for f in listdir(path) if isfile(join(path, f))]
@@ -143,7 +143,7 @@ class EasyAppDirs(appdirs.AppDirs):
         else:
             self.save(name, data)
 
-    def smart_load(self, name, data):
+    def smart_load(self, name):
         """
         Automatically loads based on the file type.
         Supports JSON/YAML and will do a regular load for everything else
