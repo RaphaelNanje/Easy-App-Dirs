@@ -33,7 +33,7 @@ class EasyAppDirs(appdirs.AppDirs):
         if not exists(self.user_log_dir):
             mkdir(self.user_log_dir)
 
-    def register_file(self, file_name: str, path: str = current_file_dir, short_name: str = None):
+    def register_file(self, file_name: str, path: str = '.', short_name: str = None):
         if file_name in self.file_paths:
             if join(path, file_name) == self.file_paths[file_name]:
                 return self.file_paths[file_name]
