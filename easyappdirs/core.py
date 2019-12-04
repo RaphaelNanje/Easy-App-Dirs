@@ -129,7 +129,7 @@ class EasyAppDirs(appdirs.AppDirs):
             if not isinstance(data, Iterable):
                 f.write(data)
             else:
-                f.write('\n'.join(data))
+                f.write('\n'.join(str(data)))
 
     def json_save(self, name: str, data, default=None, **kwargs):
         self.file_types[name] = 'json'
